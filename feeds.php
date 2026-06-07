@@ -121,12 +121,24 @@ $outchannels[] = $post['ch'];
 }
 $isaudio = !empty($post['audio']) ? 1 : 0;
 $outhtml .= '<div class="post" data-channel="'.$post['ch'].'" data-ts="'.$post['date'].'" data-audio="'.$isaudio.'">';
-if(!empty($post['image'])){
-$outhtml .= '<div class="leftpan"><img src="'.$post['image'].'" alt="'.$post['title'].'"/ ></div>';
+// 处理图片URL - 将相对路径转换为绝对路径
+$imageUrl = $post['image'];
+if (!empty($imageUrl)) {
+    // 如果是相对路径，尝试基于文章链接构建绝对路径
+    if (strpos($imageUrl, 'http') !== 0) {
+        $articleDomain = parse_url($post['link'], PHP_URL_SCHEME) . '://' . parse_url($post['link'], PHP_URL_HOST);
+        // 确保路径以/开头
+        if (strpos($imageUrl, '/') !== 0) {
+            $imageUrl = '/' . $imageUrl;
+        }
+        $imageUrl = $articleDomain . $imageUrl;
+    }
+    $outhtml .= '<div class="leftpan"><img src="'.$imageUrl.'" alt="'.$post['title'].'"/ ></div>';
 }
 else {
   $domain = parse_url($post['link'], PHP_URL_HOST);
-  $outhtml .= '<div class="leftpan"><img src="https://s2.googleusercontent.com/s2/favicons?domain='.urlencode($domain).'" alt="'.$post['title'].'"/><span class="domain">'.$domain.'</span></div>';
+  // 使用 favicon.im 获取图标
+  $outhtml .= '<div class="leftpan"><img src="https://favicon.im/'.urlencode($domain).'" alt="'.$post['title'].'"/><span class="domain">'.$domain.'</span></div>';
 }
 $outhtml .= '<div class="rightpan"><div class="feedname"><span class="channel">'.$post['ch'].'</span> &bull; <span class="date">'.date('M d, Y',$post['date']).'</span></div>
 <h2><a href="'.$post['link'].'" target="_blank">'.$post['title'].'</a></h2>';

@@ -1,4 +1,4 @@
-https://2x.nz/rss.xml
+https://2x.nz/rss.xml, 
 https://blog.zhilu.site/atom.xml
 https://blog.liushen.fun/atom.xml
 https://cworld0.com/rss.xml
